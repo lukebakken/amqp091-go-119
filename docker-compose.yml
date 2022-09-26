@@ -1,0 +1,34 @@
+version: '3'
+
+networks:
+  rabbitnet:
+    name: rabbitnet
+    driver: bridge
+
+services:
+  producer:
+    image: pivotalrabbitmq/perf-test:latest
+    networks:
+      - rabbitnet
+    command:
+      - --uris=amqp://rabbitmq
+      - --servers-startup-timeout=120
+      - --rate=1
+      - --producers=3
+      - --consumers=0
+      - --confirm=16
+      - --predeclared
+      - --exchange=federated-direct
+      - --routing-key=federated
+      - --flag=persistent
+      - --flag=mandatory
+    depends_on:
+      - rmq
+    restart: on-failure
+  consumer:
+    build: consumer
+    depends_on:
+      - rmq
+  rmq:
+    build: rmq
+    hostname: rabbitmq
