@@ -18,7 +18,7 @@ services:
       - --consumers=0
       - --confirm=16
       - --predeclared
-      - --exchange=amq.direct
+      - --queue=amqp091-go-119
       - --routing-key=amqp091-go-119
       - --flag=persistent
       - --flag=mandatory
