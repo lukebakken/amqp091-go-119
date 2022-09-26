@@ -27,8 +27,16 @@ services:
     restart: on-failure
   consumer:
     build: consumer
+    networks:
+      - rabbitnet
     depends_on:
       - rmq
   rmq:
     build: rmq
     hostname: rabbitmq
+    networks:
+      - rabbitnet
+    ports:
+      # HOST:CONTAINER
+      - 15671:15671
+      - 15672:15672

@@ -13,10 +13,16 @@ import (
 var (
 	ErrLog = log.New(os.Stderr, "[ERROR] ", log.LstdFlags|log.Lmsgprefix)
 	Log    = log.New(os.Stdout, "[INFO] ", log.LstdFlags|log.Lmsgprefix)
-	wg sync.WaitGroup
+	wg     sync.WaitGroup
 )
 
 func handler(d amqp.Delivery) {
+	Log.Printf(
+		"got %dB delivery: [%v] %q",
+		len(d.Body),
+		d.DeliveryTag,
+		d.Body,
+	)
 }
 
 func SetupCloseHandler() {
@@ -31,7 +37,7 @@ func SetupCloseHandler() {
 		* if err := rmq.Shutdown(); err != nil {
 		* 	ErrLog.Fatalf("error during shutdown: %s", err)
 		* }
-		*/
+		 */
 	}()
 }
 
@@ -45,7 +51,11 @@ func main() {
 
 	SetupCloseHandler()
 
-	go rmq.StartConsumer("amqp091-go-consumer", "", handler, 1)
+	/*
+	* Note: queue name MUST be the same as the routing key used for publish
+	* as a direct exchange is the only option at this time
+	 */
+	go rmq.StartConsumer("amqp091-go-119", "amqp091-go-119", handler, 1)
 	Log.Println("Consumer is running...")
 
 	wg.Add(1)

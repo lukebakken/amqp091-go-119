@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/getsentry/sentry-go"
-	log "github.com/sirupsen/logrus"
 	amqp "github.com/rabbitmq/amqp091-go"
+	log "github.com/sirupsen/logrus"
 )
 
 type RabbitMQ struct {
